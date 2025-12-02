@@ -13,12 +13,6 @@ document.getElementById("frmRegistro").addEventListener("submit", async (e) => {
     .querySelector('input[name="genero"]:checked')
     ?.value.trim();
 
-  console.log("nombre", nombre);
-  console.log("fecha", fecha);
-  console.log("genero", genero);
-  console.log("confirmar", confirmar);
-  console.log("nombre", nombre);
-
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -78,10 +72,10 @@ document.getElementById("frmRegistro").addEventListener("submit", async (e) => {
     if ((await result).includes("ok")) {
       Toast.fire({
         icon: "success",
-        title: "Respuesta Obtenida por el server: " + (await result).toString(),
+        title: "Gracias por registrarte. En breve te redireccionaremos " + (await result).toString(),
       });
       setTimeout(() => {
-        window.location.href = "index.php";
+        window.location.href = "home.php";
       }, 5000);
     } else if ((await result).includes("error:")) {
       Toast.fire({

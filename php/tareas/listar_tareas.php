@@ -2,14 +2,47 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+session_start();
 
+if(!isset($_SESSION['id'])){
+    header("Location: home.php");
+    exit();
+}
 include '../conexionBD.php';
 
 
 $mysqli = abrirConexion();
 
-$resultado = $mysqli->query('SELECT `ID`, `UsuarioID`, `TareaNombre`, `Descripcion`, `Estado`, `urlImagen`, `FechaCreacion`, `FechaActualizacion` from tareausuario');
+$sql = 'SELECT `ID`, `UsuarioID`, `TareaNombre`, `Descripcion`, `Estado`, `urlImagen`, `FechaCreacion`, `FechaActualizacion` FROM tareaUsuario WHERE UsuarioID = ?';
 
+$tareasDelUsuario= $mysqli->prepare($sql);
+
+$tareasDelUsuario->bind_param("s", $_SESSION['id']);
+$tareasDelUsuario->execute();
+$resultado = $tareasDelUsuario->get_result();
+
+
+/**
+ * Retorna el nombre del Estado
+ */
+function getNombreDelEstado($id){
+        $conexion = abrirConexion();
+        $sqlEstado = "SELECT ID, Nombre from estados WHERE ID = ?";
+
+        $smtEstado= $conexion->prepare($sqlEstado);
+
+        if(!$smtEstado){
+            return $id;
+        }
+
+        $smtEstado->bind_param("s", $id);
+        $smtEstado->execute();
+        $result = $smtEstado->get_result()->fetch_assoc();
+
+        cerrarConexion($conexion);
+
+        return $result['Nombre'];
+}
 cerrarConexion($mysqli);
 ?>
 
@@ -53,36 +86,38 @@ cerrarConexion($mysqli);
                 </thead>
                 <tbody>
                     <?php
-                    while ($fila = $resultado->fetch_assoc()):
-                        ?>
+                    if ($resultado) {
+                        while ($fila = $resultado->fetch_assoc()):
+                    ?>
                         <tr>
-                            <td><?php echo $fila['ID']; ?></td>
+                            <td><?= htmlspecialchars($fila['ID']); ?></td>
                             <td><?= htmlspecialchars($fila['TareaNombre']); ?></td>
-                            <td><?php echo $fila['Descripcion']; ?></td>
-                            <td><?php echo $fila['Estado']; ?></td>
-                            <td><?php echo $fila['urlImagen']; ?></td>
+                            <td><?= htmlspecialchars($fila['Descripcion']); ?></td>
+                            <td><?= htmlspecialchars(getNombreDelEstado($fila['Estado'])); ?></td>
                             <td><?= htmlspecialchars($fila['FechaCreacion']); ?></td>
                             <td><?= htmlspecialchars($fila['FechaActualizacion']); ?></td>
+                            <td><?= htmlspecialchars($fila['urlImagen']); ?></td>
                             <td>
-                                <div class="d-flex">
-                                    <a href="editar_usuario.php?id=<?= $fila['ID']; ?>" class="btn btn-secondary">Editar</a>
-                                    <a href="eliminar_usuario.php?id=<?= $fila['ID']; ?>"
-                                        class="btn btn-danger">Eliminar</a>
+                                <div class="d-flex gap-2">
+                                    <a href="editar_tarea.php?id=<?= urlencode($fila['ID']); ?>" class="btn btn-secondary">Editar</a>
+                                    <a href="eliminar_tarea.php?id=<?= urlencode($fila['ID']); ?>" class="btn btn-danger">Eliminar</a>
                                 </div>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php 
+                        endwhile; 
+                    } // EndIf
+                    ?>
                 </tbody>
+
             </table>
         </div>
 
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
+    <script defer async>
         $(document).ready(() => {
             $('#tabla').dataTable({
                 language: {
