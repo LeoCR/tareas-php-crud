@@ -46,7 +46,7 @@ document
     //Hace login
     try {
       const respuesta = await fetch(
-        "http://localhost:8080/universidad-fidelitas/Sem3/php/login/login.php",
+        "http://localhost:8080/universidad-fidelitas/LeonardoAranibar_P4_G7_JN/php/login/login.php",
         {
           method: "POST",
           headers: {
@@ -75,7 +75,7 @@ document
         });
 
         setTimeout(() => {
-          window.location.href = "home.php";
+          window.location.href = "/universidad-fidelitas/LeonardoAranibar_P4_G7_JN/";
         }, 3000);
       }
       return;

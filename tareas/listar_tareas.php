@@ -5,10 +5,10 @@ error_reporting(E_ALL);
 session_start();
 
 if(!isset($_SESSION['id'])){
-    header("Location: home.php");
+    header("Location: ../login.php");
     exit();
 }
-include '../conexionBD.php';
+include '../php/conexionBD.php';
 
 
 $mysqli = abrirConexion();
@@ -52,7 +52,7 @@ cerrarConexion($mysqli);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/css/home.css">
+    <link rel="stylesheet" href="/universidad-fidelitas/LeonardoAranibar_P4_G7_JN/assets/css/home.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Listado de Tareas</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -64,7 +64,7 @@ cerrarConexion($mysqli);
 </head>
 
 <body>
-    <?php include '../componentes/navbar.php'; ?>
+    <?php include '../php/componentes/navbar.php'; ?>
     <div class="container mt-5">
         <div class="card p-4 shadow">
             <div class="d-flex justify-content-between mb-5">
@@ -88,7 +88,7 @@ cerrarConexion($mysqli);
                     <?php
                     if ($resultado) {
                         while ($fila = $resultado->fetch_assoc()):
-                    ?>
+                        ?>
                         <tr>
                             <td><?= htmlspecialchars($fila['ID']); ?></td>
                             <td><?= htmlspecialchars($fila['TareaNombre']); ?></td>
@@ -96,11 +96,11 @@ cerrarConexion($mysqli);
                             <td><?= htmlspecialchars(getNombreDelEstado($fila['Estado'])); ?></td>
                             <td><?= htmlspecialchars($fila['FechaCreacion']); ?></td>
                             <td><?= htmlspecialchars($fila['FechaActualizacion']); ?></td>
-                            <td><?= htmlspecialchars($fila['urlImagen']); ?></td>
+                            <td> <img class="w-100 h-100 object-fit-cover" src="<?php echo $fila['urlImagen']; ?>" alt="Tarea <?php echo $fila['TareaNombre']; ?>"></td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a href="editar_tarea.php?id=<?= urlencode($fila['ID']); ?>" class="btn btn-secondary">Editar</a>
-                                    <a href="eliminar_tarea.php?id=<?= urlencode($fila['ID']); ?>" class="btn btn-danger">Eliminar</a>
+                                    <a href="/universidad-fidelitas/LeonardoAranibar_P4_G7_JN/tareas/editar_tarea.php?task=<?= urlencode($fila['ID']); ?>" class="btn btn-secondary">Editar</a>
+                                    <a  data-task-id="<?= urlencode($fila['ID']); ?>" href="#eliminar-<?= urlencode($fila['ID']); ?>" class="btn btn-danger btn-eliminar-tarea">Eliminar</a>
                                 </div>
                             </td>
                         </tr>
@@ -126,6 +126,7 @@ cerrarConexion($mysqli);
             })
         })
     </script>
+    <script src="/universidad-fidelitas/LeonardoAranibar_P4_G7_JN/assets/js/eliminar-tarea.js" defer></script>
 </body>
 
 </html>

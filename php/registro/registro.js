@@ -75,7 +75,7 @@ document.getElementById("frmRegistro").addEventListener("submit", async (e) => {
         title: "Gracias por registrarte. En breve te redireccionaremos " + (await result).toString(),
       });
       setTimeout(() => {
-        window.location.href = "home.php";
+        window.location.href = "/universidad-fidelitas/LeonardoAranibar_P4_G7_JN/";
       }, 5000);
     } else if ((await result).includes("error:")) {
       Toast.fire({

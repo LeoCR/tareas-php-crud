@@ -35,6 +35,6 @@ CREATE TABLE IF NOT EXISTS tareaUsuario(
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
 
-  INSERT INTO `estados` (`ID`, `Nombre`) VALUES (1, 'En Progreso'), (2, 'Bloqueada'), (3, 'Pendiente'), (4, 'Imcompleta');
+  INSERT INTO `estados` (`ID`, `Nombre`) VALUES (1, 'En Progreso'), (2, 'Bloqueada'), (3, 'Pendiente'), (4, 'Imcompleta'), (5, 'Completada');
 
 
